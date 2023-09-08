@@ -1,0 +1,80 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+library(ggplot2)
+library(psych)
+library (plyr)
+library(MASS)
+library(data.table)
+library(reshape)
+library(reshape2)
+
+library(Hmisc, quietly=TRUE)
+require(dplyr)
+require(Amelia)
+library(fBasics, quietly=TRUE)
+require(mice)
+require(caret)
+require(dummies)
+require(ggplot2)
+require(scales)
+require(e1071)
+require(corrplot)
+require(vcd)
+require(VIM)
+library(nnet)
+library(Metrics)
+library(sqldf)
+#-------------Data Acquisition------------------------
+train<-read.csv("Train.csv")
+test<-read.csv("Test.csv")
+#------------Description Analysis--------------------
+#class
+train_class = class(train)
+test_class=class(test)
+#Dimention
+train_dim = dim(train)
+test_dim = dim(test)
+#Summary
+train_summary=summary(train)
+test_summary=summary(test)
+#Head
+train_head = head(train)
+test_head = head(test)
+#----------Statistication Analysis----------------------
+#Look at Missing Values
+train_structure<-str(train)
+missmap(train)
+
+# Get the fitted parameters used by the function
+fit <- fitdistr(train$SalePrice, "normal")
+class(fit)
+para <- fit$estimate
+print(paste(para))
+#z <- (72 - mu) / sigma
+#Histogram
+h <- hist(train$SalePrice, breaks = 10, density = 20,
+          col = "lightgray", xlab = "Accuracy", main = "Overall") 
+xfit <- seq(min(train$SalePrice), max(train$SalePrice), length = 50) 
+yfit <- dnorm(xfit, para[1], para[2]) 
+yfit <- yfit * diff(h$mids[1:2]) * length(train$SalePrice) 
+
+lines(xfit, yfit, col = "black", lwd = 2)
+#hist(train$SalePrice, density=20, breaks=20, prob=TRUE, 
+#     xlab="SalesPrice", ylim=c(0, 2), 
+ #    main="Normal Distribution Curve on SalesPrice Histogram")
+#curve(dnorm(x, mean=sigma, sd=mu), 
+#      col="darkblue", lwd=2, add=TRUE, yaxt="n")
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
